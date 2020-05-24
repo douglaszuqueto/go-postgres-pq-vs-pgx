@@ -25,7 +25,7 @@ func NewGoPg() *GoPg {
 }
 
 // GetUser GetUser
-func (s *GoPg) GetUser(id string) (User, error) {
+func (s *GoPg) GetUser(ctx context.Context, id string) (User, error) {
 	var u User
 
 	query := `
@@ -39,7 +39,7 @@ func (s *GoPg) GetUser(id string) (User, error) {
 			id = $1
 	`
 
-	err := s.doQueryRow("[PG] GetUser", query, id).Scan(
+	err := s.doQueryRow("[PG] GetUser", ctx, query, id).Scan(
 		&u.ID,
 		&u.Username,
 		&u.Email,
@@ -98,9 +98,9 @@ func (s *GoPg) doQuery(name, query string, args ...interface{}) (pgx.Rows, error
 	return rows, err
 }
 
-func (s *GoPg) doQueryRow(name, query string, args ...interface{}) pgx.Row {
+func (s *GoPg) doQueryRow(name string, ctx context.Context, query string, args ...interface{}) pgx.Row {
 	start := time.Now()
-	row := s.db.QueryRow(context.Background(), query, args...)
+	row := s.db.QueryRow(ctx, query, args...)
 	logQuery(name, time.Since(start), args...)
 
 	return row

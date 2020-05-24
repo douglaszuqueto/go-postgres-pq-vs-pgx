@@ -16,6 +16,9 @@ var (
 
 	// ErrDoesNotExist ErrDoesNotExist
 	ErrDoesNotExist = errors.New("object does not exist")
+
+	// ErrQueryIsCanceled ErrQueryIsCanceled
+	ErrQueryIsCanceled = errors.New("query is canceled")
 )
 
 func init() {
@@ -44,6 +47,8 @@ func HandlePSQLError(err error) error {
 			return errors.Wrap(ErrAlreadyExists, err.Constraint)
 		case "foreign_key_violation":
 			return ErrDoesNotExist
+		case "query_canceled":
+			return ErrQueryIsCanceled
 		default:
 			log.Println(err.Code.Name())
 			return err

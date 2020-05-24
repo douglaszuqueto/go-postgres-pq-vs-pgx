@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
-	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx-pq-vs-pgx/pkg/storage"
+	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx/pkg/storage"
 )
 
 var (
@@ -14,9 +17,9 @@ var (
 )
 
 func main() {
-	fmt.Println("GoPg")
+	fmt.Println("Go PostgreSQL test drivers")
 
-	// testPq()
+	testPq()
 	// testPg()
 
 	http.HandleFunc("/pq", handlerPq)
@@ -48,43 +51,83 @@ var size = 10
 func testPq() {
 	db := storage.NewGoPq()
 
-	for i := 0; i < size; i++ {
-		user, err := db.GetUser("2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
-		if err != nil {
-			panic(err)
-		}
+	// for i := 0; i < size; i++ {
+	// 	user, err := db.GetUser("2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
 
-		fmt.Println(user.ID, user.Username)
-	}
+	// 	fmt.Println(user.ID, user.Username)
+	// }
 
-	for i := 0; i < size; i++ {
-		user, err := db.GetUsers()
-		if err != nil {
-			panic(err)
-		}
+	// for i := 0; i < size; i++ {
+	// 	user, err := db.GetUsers()
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
 
-		fmt.Println(len(user))
-	}
+	// 	fmt.Println(len(user))
+	// }
+
+	getUser2(db, 1)
+	getUser2(db, 10)
+	getUser2(db, 15)
 }
 
 func testPg() {
 	db := storage.NewGoPg()
 
-	for i := 0; i < size; i++ {
-		user, err := db.GetUser("2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
-		if err != nil {
-			panic(err)
-		}
+	// for i := 0; i < size; i++ {
+	// 	ts := time.Millisecond * 8
+	// 	ctx, cancel := context.WithTimeout(context.Background(), ts)
+	// 	defer cancel()
 
-		fmt.Println(user.ID, user.Username)
+	// 	user, err := db.GetUser(ctx, "2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 	}
+
+	// 	fmt.Println(i, user.ID, user.Username)
+	// }
+
+	getUser(db, 5)
+	getUser(db, 10)
+	getUser(db, 15)
+
+	// for i := 0; i < size; i++ {
+	// 	user, err := db.GetUsers()
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+
+	// 	fmt.Println(len(user))
+	// }
+}
+
+func getUser(db *storage.GoPg, n int) {
+	ts := time.Millisecond * time.Duration(n)
+
+	ctx, cancel := context.WithTimeout(context.Background(), ts)
+	defer cancel()
+
+	user, err := db.GetUser(ctx, "2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
+	if err != nil {
+		log.Println(err)
 	}
 
-	for i := 0; i < size; i++ {
-		user, err := db.GetUsers()
-		if err != nil {
-			panic(err)
-		}
+	fmt.Println(user.ID, user.Username, ts)
+}
 
-		fmt.Println(len(user))
+func getUser2(db *storage.GoPq, n int) {
+	ts := time.Millisecond * time.Duration(n)
+
+	ctx, cancel := context.WithTimeout(context.Background(), ts)
+	defer cancel()
+
+	user, err := db.GetUser(ctx, "2e4418d4-0deb-4131-a9f6-d173c15d8c3b")
+	if err != nil {
+		log.Println(err)
 	}
+
+	fmt.Println(user.ID, user.Username, ts)
 }

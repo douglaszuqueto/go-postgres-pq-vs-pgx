@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"os"
@@ -23,7 +24,7 @@ func NewGoPq() *GoPq {
 }
 
 // GetUser GetUser
-func (s *GoPq) GetUser(id string) (User, error) {
+func (s *GoPq) GetUser(ctx context.Context, id string) (User, error) {
 	var u User
 
 	query := `
@@ -37,7 +38,7 @@ func (s *GoPq) GetUser(id string) (User, error) {
 			id = $1
 	`
 
-	err := s.doQueryRow("[PQ] GetUser", query, id).Scan(
+	err := s.doQueryRow(ctx, "[PQ] GetUser", query, id).Scan(
 		&u.ID,
 		&u.Username,
 		&u.Email,
@@ -92,9 +93,9 @@ func (s *GoPq) doQuery(name, query string, args ...interface{}) (*sql.Rows, erro
 	return rows, err
 }
 
-func (s *GoPq) doQueryRow(name, query string, args ...interface{}) *sql.Row {
+func (s *GoPq) doQueryRow(ctx context.Context, name, query string, args ...interface{}) *sql.Row {
 	start := time.Now()
-	row := s.db.QueryRow(query, args...)
+	row := s.db.QueryRowContext(ctx, query, args...)
 	logQuery(name, time.Since(start), args...)
 
 	return row

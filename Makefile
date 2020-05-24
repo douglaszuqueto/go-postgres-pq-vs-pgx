@@ -8,6 +8,8 @@ dev:
 build:
 	CGO_ENABLED=0
 	
+	go build -ldflags="-s -w" -o ./bin/go ./main.go
+
 	go build -ldflags="-s -w" -o ./bin/go-pg ./cmd/pg/pg.go
 	go build -ldflags="-s -w" -o ./bin/go-pq ./cmd/pq/pq.go
 
