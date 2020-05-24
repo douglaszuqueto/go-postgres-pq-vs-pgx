@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx/pkg/storage"
+	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx-pq-vs-pgx/pkg/storage"
 )
 
 var (
