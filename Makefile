@@ -12,7 +12,7 @@ build:
 	go build -ldflags="-s -w" -o ./bin/go-pq ./cmd/pq/pq.go
 
 bench:
-	go test -benchmem -run=^$ go-postgres -bench .
+	go test -benchmem -run=^$ github.com/douglaszuqueto/go-postgres-pq-vs-pgx -bench .
 	
 upx: build
 	upx ./bin/go-pg

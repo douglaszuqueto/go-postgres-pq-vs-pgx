@@ -1,8 +1,9 @@
 package main_test
 
 import (
-	"go-postgres/pkg/storage"
 	"testing"
+
+	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx/pkg/storage"
 )
 
 var size = 10

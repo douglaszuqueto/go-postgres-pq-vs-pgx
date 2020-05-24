@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"go-postgres/pkg/storage"
 	"net/http"
+
+	"github.com/douglaszuqueto/go-postgres-pq-vs-pgx/pkg/storage"
 )
 
 var (
